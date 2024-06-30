@@ -1,0 +1,157 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color:white;">Glycemie Tracker</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Glycemie <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input type="search" (ngModelChange)="searchGlycemies(key.value)" #key="ngModel" ngModel
+       name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search employees..." required>
+   </form>
+  </div>
+</nav>
+
+<div class="container" id="main-container">
+  <div class="row">
+    <div *ngFor="let glycemie of glycemies" class="col-md-6 col-xl-3">
+      <div class="card m-b-30">
+        <div class="card-body row">
+          <div class="col-6">
+            <a href=""><img src="{{glycemie?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
+          </div>
+          <div class="col-6 card-title align-self-center mb-0">
+            <h5>{{glycemie?.name}}</h5>
+            <p class="m-0">{{glycemie?.day}}</p>
+          </div>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><i class="fa fa-envelope float-right"></i>LeveL :  {{glycemie?.level}}</li>
+          <li class="list-group-item"><i class="fa fa-phone float-right"></i>Date : {{glycemie?.date}}</li>
+        </ul>
+        <div class="card-body">
+          <div class="float-right btn-group btn-group-sm">
+            <a (click)="onOpenModal(glycemie, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+            <a (click)="onOpenModal(glycemie, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <!-- Add Glycemie Modal -->
+<div class="modal" [ngClass]="{'show': isAddModalOpen}" tabindex="-1" role="dialog" [ngStyle]="{'display': isAddModalOpen ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Glycemie</h5>
+        <button type="button" class="close" (click)="closeModal('add')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddGlycemie(addForm)">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+          </div>
+          <div class="form-group">
+            <label for="level">Glycemie Level</label>
+            <input type="number" ngModel name="level" class="form-control" id="level" placeholder="Glycemie Level" required>
+          </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" ngModel name="date" class="form-control" id="date" placeholder="Date" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Day</label>
+            <input type="text" ngModel name="day" class="form-control" id="phone" placeholder="Day" required>
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image URL</label>
+            <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal('add')">Close</button>
+            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal" [ngClass]="{'show': isEditModalOpen}" tabindex="-1" role="dialog" [ngStyle]="{'display': isEditModalOpen ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Glycemie {{editGlycemie?.name}}</h5>
+        <button type="button" class="close" (click)="closeModal('edit')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editForm="ngForm" (ngSubmit)="onUpdateGlycemie(editForm)">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+          </div>
+          <div class="form-group">
+            <label for="level">Glycemie Level</label>
+            <input type="number" ngModel name="level" class="form-control" id="level" placeholder="Glycemie Level" required>
+          </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" ngModel name="date" class="form-control" id="date" placeholder="Date" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Day</label>
+            <input type="text" ngModel name="day" class="form-control" id="phone" placeholder="Day" required>
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image URL</label>
+            <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal('edit')">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal" [ngClass]="{'show': isDeleteModalOpen}" tabindex="-1" role="dialog" [ngStyle]="{'display': isDeleteModalOpen ? 'block' : 'none'}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Glycemie</h5>
+        <button type="button" class="close" (click)="closeModal('delete')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="deleteGlycemie">Are you sure you want to delete glycemie {{deleteGlycemie.name}}?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal('delete')">No</button>
+          <button *ngIf="deleteGlycemie" (click)="onDeleteGlycemie(deleteGlycemie.id)" class="btn btn-danger">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification for no employees -->
+<div *ngIf="glycemies?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+<div class="alert alert-info" role="alert">
+  <h4 class="alert-heading">NO GLYCEMIES!</h4>
+  <p>No Glycemie were found.</p>
+</div>
+</div>
