@@ -1,6 +1,7 @@
 package diabetes.med.diabetesTracker.service;
 
 import diabetes.med.diabetesTracker.service.execption.GlycemieNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import diabetes.med.diabetesTracker.model.Glycemie;
@@ -32,11 +33,16 @@ public class GlycemieService {
     }
 
     public Glycemie findGlycemieById(Long id) {
-        return glycemieRepo.findGlycemieById(id)
+        return glycemieRepo.findById(id)
                 .orElseThrow(() -> new GlycemieNotFoundException("Glycemie with id " + id + " not found"));
     }
 
+    @Transactional
     public void deleteGlycemie(Long id) {
-        glycemieRepo.deleteGlycemieById(id);
+        glycemieRepo.deleteById(id);
+    }
+
+    public List<Glycemie> searchGlycemies(String name) {
+        return glycemieRepo.findByNameContainingIgnoreCase(name);
     }
 }
